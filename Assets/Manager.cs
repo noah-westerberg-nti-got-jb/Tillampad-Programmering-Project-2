@@ -5,7 +5,7 @@ using UnityEngine;
 public class Manager : MonoBehaviour
 {
 
-    int time = 1;
+    private int time = 1;
 
     void Update()
     {

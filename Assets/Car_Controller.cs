@@ -7,7 +7,7 @@ public class Car_Controller : MonoBehaviour
 
     [SerializeField] bool control = false;
 
-    float velocity = 0;
+    private float velocity = 0;
 
     [SerializeField] float acceleration = .4f;
 
@@ -16,13 +16,6 @@ public class Car_Controller : MonoBehaviour
     [SerializeField] float rotationSpeed = 50;
 
     [SerializeField] float slowDown = .05f;
-
-    Rigidbody rigidbody;
-
-    void Start()
-    {
-        rigidbody = GetComponent<Rigidbody>();
-    }
 
     void Update() 
     {
@@ -36,7 +29,7 @@ public class Car_Controller : MonoBehaviour
                 turn(1);
         }
 
-        rigidbody.MovePosition(rigidbody.position + transform.forward * velocity * Time.deltaTime);
+        transform.Translate(transform.forward * velocity * Time.deltaTime, Space.Self);
 
         if (velocity > 0.01)
             velocity -= slowDown * velocity * Time.deltaTime + acceleration / 10;
@@ -53,7 +46,7 @@ public class Car_Controller : MonoBehaviour
 
     void turn(int direction)
     {   
-        rigidbody.rotation = Quaternion.Euler(0, rotationSpeed * direction * Time.deltaTime, 0);
+        transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime), Space.Self);
     }
 
     void OnCollisionEnter(Collision collision)
