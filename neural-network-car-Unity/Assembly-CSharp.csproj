@@ -9,7 +9,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{4308E01C-51C9-1AED-19CE-D96FB829CEDB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,8 +61,9 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.17f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Car_Controller.cs" />
+    <Compile Include="Assets\CarController.cs" />
     <Compile Include="Assets\Manager.cs" />
+    <Compile Include="Assets\NeuralNetworkScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

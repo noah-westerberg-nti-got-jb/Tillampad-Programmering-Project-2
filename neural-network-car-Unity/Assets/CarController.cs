@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Car_Controller : MonoBehaviour
+public class CarController : MonoBehaviour
 {
 
     [SerializeField] bool control = false;
 
     [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10;
 
-    private float velocity = 0;
+    public float velocity = 0;
+
+    private float currentAcceleration = 0;
 
     void Start()
     {
@@ -22,6 +24,8 @@ public class Car_Controller : MonoBehaviour
 
     void Update() 
     {
+        currentAcceleration = 0;
+        
         if (control)
         {
             if (Input.GetKey(KeyCode.W))
@@ -35,27 +39,16 @@ public class Car_Controller : MonoBehaviour
                 velocity = 0;
         }
 
-        // transform.Translate(transform.forward * velocity * Time.deltaTime, 0);
-
-        if (velocity > 0.01)
-            velocity -= deceleration * velocity * Time.deltaTime;
-        else
+        // s = v * t + a * t^2 / 2
+        transform.Translate(transform.forward * (velocity * Time.deltaTime + (acceleration * Mathf.Pow(Time.deltaTime, 2) / 2)), 0); 
+        velocity += (currentAcceleration - deceleration * velocity) * Time.deltaTime;
+        if (velocity < 0.01)
             velocity = 0;
     }
 
     public void Accelerate()
     {
-        //velocity += acceleration;
-        //if (velocity > maxSpeed)
-        //    velocity = maxSpeed;
-
-        if (velocity <= maxSpeed)
-        { 
-        transform.Translate(transform.forward * (velocity * Time.deltaTime + (acceleration * Mathf.Pow(Time.deltaTime, 2) / 2)), 0); // s = v * t + a * t^2 / 2
-        velocity += acceleration;
-        }
-        else
-            transform.Translate(transform.forward * velocity * Time.deltaTime, 0);
+        currentAcceleration = acceleration;
     }
 
     public void Turn(int direction)
