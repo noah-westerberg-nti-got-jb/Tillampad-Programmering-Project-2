@@ -7,7 +7,7 @@ public class Car_Controller : MonoBehaviour
 
     [SerializeField] bool control = false;
 
-    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, slowDown = .05f, maxRotationRadius = 10;
+    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10;
 
     private float velocity = 0;
 
@@ -35,19 +35,27 @@ public class Car_Controller : MonoBehaviour
                 velocity = 0;
         }
 
-        transform.Translate(transform.forward * velocity * Time.deltaTime, 0);
+        // transform.Translate(transform.forward * velocity * Time.deltaTime, 0);
 
         if (velocity > 0.01)
-            velocity -= slowDown * velocity * Time.deltaTime + acceleration / 10;
+            velocity -= deceleration * velocity * Time.deltaTime;
         else
             velocity = 0;
     }
 
     public void Accelerate()
     {
+        //velocity += acceleration;
+        //if (velocity > maxSpeed)
+        //    velocity = maxSpeed;
+
+        if (velocity <= maxSpeed)
+        { 
+        transform.Translate(transform.forward * (velocity * Time.deltaTime + (acceleration * Mathf.Pow(Time.deltaTime, 2) / 2)), 0); // s = v * t + a * t^2 / 2
         velocity += acceleration;
-        if (velocity > maxSpeed)
-            velocity = maxSpeed;
+        }
+        else
+            transform.Translate(transform.forward * velocity * Time.deltaTime, 0);
     }
 
     public void Turn(int direction)

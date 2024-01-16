@@ -5,25 +5,25 @@ using UnityEngine;
 public class Manager : MonoBehaviour
 {
 
-    private int time = 1;
+    private float time = 1;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Plus))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             time = time * 2;
-            SetTime();
+            SetTime(time);
         }
-        else if (Input.GetKeyDown(KeyCode.Minus))
+        else if (Input.GetKeyDown(KeyCode.P))
         {
             time = time / 2;
-            SetTime();
+            SetTime(time);
         }
     }
 
-    void SetTime()
+    void SetTime(float scale)
     {
-        Time.timeScale = time;
-        Debug.Log("Time Set to: " + time);
+        Time.timeScale = scale;
+        Debug.Log("Time Set to: " + scale);
     }
 }

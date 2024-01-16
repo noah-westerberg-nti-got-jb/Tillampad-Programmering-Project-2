@@ -751,10 +751,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   control: 1
-  acceleration: 0.2
-  maxSpeed: 20
+  acceleration: 0.5
+  maxSpeed: 50
   rotationSpeed: 180
-  slowDown: 0.05
+  deceleration: 0.25
   maxRotationRadius: 10
 --- !u!54 &1693167882
 Rigidbody:
