@@ -7,11 +7,15 @@ public class CarController : MonoBehaviour
 
     [SerializeField] bool control = false;
 
-    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10;
-
-    public float velocity = 0;
+    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10, velocity = 0;
 
     private float currentAcceleration = 0;
+
+    [SerializeField] Gradient rayColorGradient;
+
+    [SerializeField] Transform front;
+    [SerializeField] float v;
+    [SerializeField] int c;
 
     void Start()
     {
@@ -22,10 +26,13 @@ public class CarController : MonoBehaviour
             meshRenderer.material.color = carColor;
     }
 
-    void Update() 
+    void Update()
     {
+        float[] distances = getDistances(c, -v, v);
+        //Debug.Log(distances[0] + " " + distances[1] + " " + distances[2] + " " + distances[3] + " " + distances[4]);
+
         currentAcceleration = 0;
-        
+
         if (control)
         {
             if (Input.GetKey(KeyCode.W))
@@ -39,8 +46,13 @@ public class CarController : MonoBehaviour
                 velocity = 0;
         }
 
+        if (velocity >= maxSpeed)
+        {
+            velocity = maxSpeed;
+            currentAcceleration = 0;
+        }
         // s = v * t + a * t^2 / 2
-        transform.Translate(transform.forward * (velocity * Time.deltaTime + (acceleration * Mathf.Pow(Time.deltaTime, 2) / 2)), 0); 
+        transform.Translate(transform.forward * (velocity * Time.deltaTime + (currentAcceleration * Mathf.Pow(Time.deltaTime, 2) / 2)), 0);
         velocity += (currentAcceleration - deceleration * velocity) * Time.deltaTime;
         if (velocity < 0.01)
             velocity = 0;
@@ -62,9 +74,34 @@ public class CarController : MonoBehaviour
         transform.Rotate(new Vector3(0, rotation), Space.Self);
     }
 
-    void OnTriggerEnter(Collider other)
+    float[] getDistances(int rays, float minAngle, float maxAngle)
     {
-        if (other.tag == "wall")
-            Debug.Log("Crashed");
+        float[] distances = new float[rays];
+        float distanceBetweenRays = (maxAngle - minAngle) / (rays - 1);
+        float carAngle = Mathf.Atan2(transform.forward.z, transform.forward.x);
+        Debug.Log(carAngle);
+
+        for (int i = 0; i < rays; i++)
+        {
+            Vector3 direction = new Vector3(Mathf.Cos(carAngle + (minAngle + (distanceBetweenRays * i)) * Mathf.Deg2Rad), 0, Mathf.Sin(carAngle + (minAngle + (distanceBetweenRays * i)) * Mathf.Deg2Rad)).normalized;
+
+            RaycastHit hit;
+            if (Physics.Raycast(front.position, direction, out hit, 20, LayerMask.GetMask("Wall")))
+            {
+                distances[i] = (front.position - hit.point).magnitude;
+            }
+            else
+                distances[i] = 20;
+
+                Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
+                Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
+            }
+            return distances;
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "wall")
+                Debug.Log("Crashed");
+        }
     }
-}

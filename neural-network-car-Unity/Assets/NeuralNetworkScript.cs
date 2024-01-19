@@ -3,29 +3,26 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class NeuralNetworkScript : MonoBehaviour
-    {
-        NeuralNetwork neuralNework = new NeuralNetwork();
-
-        void Update()
-        {
-            
-        }
-    }
-
-    class NeuralNode
-    { 
-        public double output;
-        public double[] input, weights, biases;
-    }
     class NetworkLayer
     {
-        NeuralNode[] nodes;
+        double[,] weights;
+        double[] biases;
+
+        public NetworkLayer(int inputNodes, int outputNodes)
+        {
+            weights = new double[outputNodes, inputNodes];
+            biases = new double[outputNodes];
+        }
+
+        public double[] calculateOutput(double[] input)
+        {
+
+            return new double[input.Length];
+        }
     }
 
     class NeuralNetwork
     {
-
         NetworkLayer[] layers;
 
         public void Learn()

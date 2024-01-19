@@ -7,6 +7,10 @@ public class Manager : MonoBehaviour
 
     private float time = 1;
 
+    [SerializeField] GameObject car;
+
+    [SerializeField] int count = 0;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
@@ -18,6 +22,12 @@ public class Manager : MonoBehaviour
         {
             time = time / 2;
             SetTime(time);
+        }
+
+        if (Input.GetKey(KeyCode.G))
+        {
+            GameObject.Instantiate(car);
+            count++;
         }
     }
 
