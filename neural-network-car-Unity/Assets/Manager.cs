@@ -8,8 +8,9 @@ public class Manager : MonoBehaviour
     private float time = 1;
 
     [SerializeField] GameObject car;
+    private List<GameObject> cars = new List<GameObject>();
 
-    [SerializeField] int count = 0;
+    public int carCount;
 
     void Update()
     {
@@ -26,8 +27,7 @@ public class Manager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.G))
         {
-            GameObject.Instantiate(car);
-            count++;
+            SpawnCar(new Vector3(0, 1, 0));
         }
     }
 
@@ -35,5 +35,11 @@ public class Manager : MonoBehaviour
     {
         Time.timeScale = scale;
         Debug.Log("Time Set to: " + scale);
+    }
+
+    void SpawnCar(Vector3 position)
+    { 
+        cars.Add(GameObject.Instantiate(car, position, Quaternion.identity));
+        carCount = cars.Count;
     }
 }

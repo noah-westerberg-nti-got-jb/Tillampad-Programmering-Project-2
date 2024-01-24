@@ -14,8 +14,8 @@ public class CarController : MonoBehaviour
     [SerializeField] Gradient rayColorGradient;
 
     [SerializeField] Transform front;
-    [SerializeField] float v;
-    [SerializeField] int c;
+    [SerializeField] float viewAngle = 70;
+    [SerializeField] int vissionLines = 5;
 
     void Start()
     {
@@ -28,8 +28,7 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        float[] distances = getDistances(c, -v, v);
-        //Debug.Log(distances[0] + " " + distances[1] + " " + distances[2] + " " + distances[3] + " " + distances[4]);
+        GetDistances(vissionLines, -viewAngle, viewAngle);
 
         currentAcceleration = 0;
 
@@ -74,12 +73,11 @@ public class CarController : MonoBehaviour
         transform.Rotate(new Vector3(0, rotation), Space.Self);
     }
 
-    float[] getDistances(int rays, float minAngle, float maxAngle)
+    public float[] GetDistances(int rays, float minAngle, float maxAngle)
     {
         float[] distances = new float[rays];
         float distanceBetweenRays = (maxAngle - minAngle) / (rays - 1);
         float carAngle = Mathf.Atan2(transform.forward.z, transform.forward.x);
-        Debug.Log(carAngle);
 
         for (int i = 0; i < rays; i++)
         {
@@ -93,9 +91,9 @@ public class CarController : MonoBehaviour
             else
                 distances[i] = 20;
 
-                Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
+             Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
                 Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
-            }
+        }
             return distances;
         }
 
