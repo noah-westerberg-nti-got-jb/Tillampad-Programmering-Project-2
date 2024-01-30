@@ -12,6 +12,16 @@ public class Manager : MonoBehaviour
 
     public int carCount;
 
+    GenerateTrack trackGenerator;
+
+    [SerializeField] float trackLength, trackWidth;
+    [SerializeField] int turns;
+
+    private void Start()
+    {
+        trackGenerator = GetComponent<GenerateTrack>();
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
@@ -25,9 +35,19 @@ public class Manager : MonoBehaviour
             SetTime(time);
         }
 
-        if (Input.GetKey(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             SpawnCar(new Vector3(0, 1, 0));
+
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            foreach(GameObject car in cars)
+                Destroy(car);
+            foreach (GameObject checkpoint in GameObject.FindGameObjectsWithTag("Checkpoint"))
+                Destroy(checkpoint);
+
+            trackGenerator.Generate(trackLength, turns, trackWidth);
         }
     }
 
@@ -39,7 +59,8 @@ public class Manager : MonoBehaviour
 
     void SpawnCar(Vector3 position)
     { 
-        cars.Add(GameObject.Instantiate(car, position, Quaternion.identity));
+        cars.Add(Instantiate(car, position, Quaternion.identity));
+        cars[cars.Count - 1].name = (cars.Count - 1).ToString();
         carCount = cars.Count;
     }
 }

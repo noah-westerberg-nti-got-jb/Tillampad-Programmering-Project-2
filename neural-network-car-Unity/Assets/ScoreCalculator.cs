@@ -4,37 +4,46 @@ using UnityEngine;
 
 public class ScoreCalculator : MonoBehaviour
 {
-    GameObject[] checkpoints;
+    GameObject[] checkpoints, cars;
     int currentCheckpointIndex = 0;
     Checkpoint currentCheckpoint;
 
-    float distancePassed = 0, distanceFromPassedCheckpoints, timeSinceStart = 0, distancePassedToNextCheckpoint;
+    float[] distancePassed, distanceFromPassedCheckpoints, distancePassedToNextCheckpoint;
+    float timeSinceStart;
 
     private void OnEnable()
     {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         currentCheckpoint = checkpoints[currentCheckpointIndex].GetComponent<Checkpoint>();
+
+        cars = GameObject.FindGameObjectsWithTag("Car");
+        distancePassed = new float[cars.Length];
+        distanceFromPassedCheckpoints = new float[cars.Length];
+        distancePassedToNextCheckpoint = new float[cars.Length];
     }
 
     private void Update()
     {
         timeSinceStart += Time.deltaTime;
 
-        distancePassedToNextCheckpoint = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.GetComponent<Transform>().position).magnitude;
-        distancePassed = distanceFromPassedCheckpoints + distancePassedToNextCheckpoint;
+        for (int i = 0; i < cars.Length; i++)
+        { 
+            distancePassedToNextCheckpoint[i] = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.GetComponent<Transform>().position).magnitude;
+            distancePassed[i] = distanceFromPassedCheckpoints[i] + distancePassedToNextCheckpoint[i];
+        }
     }
 
-    public void PassedCheckpoint(int index)
+    public void PassedCheckpoint(int checkpointIndex, int carIndex)
     {
-        if (index != currentCheckpointIndex) return;
+        if (checkpointIndex != currentCheckpointIndex) return;
 
-        distanceFromPassedCheckpoints += currentCheckpoint.GetDistance();
+        distanceFromPassedCheckpoints[carIndex] += currentCheckpoint.GetDistance();
 
         currentCheckpointIndex++;
-    } 
+    }
 
-    public float Score()
+    public float Score(int carIndex)
     {
-        return distancePassed / timeSinceStart;
+        return distancePassed[carIndex] / timeSinceStart;
     }
 }

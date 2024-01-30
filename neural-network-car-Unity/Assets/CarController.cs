@@ -91,8 +91,8 @@ public class CarController : MonoBehaviour
             else
                 distances[i] = 20;
 
-             Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
-                Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
+            Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
+            Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
         }
             return distances;
         }

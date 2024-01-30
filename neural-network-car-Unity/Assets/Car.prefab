@@ -249,7 +249,7 @@ MonoBehaviour:
   rotationSpeed: 150
   deceleration: 0.5
   maxRotationRadius: 10
-  velocity: 0
+  velocity: 10
   rayColorGradient:
     serializedVersion: 2
     key0: {r: 0, g: 1, b: 0, a: 1}
@@ -281,8 +281,8 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   front: {fileID: 8508716627238182723}
-  v: 75
-  c: 5
+  viewAngle: 70
+  vissionLines: 5
 --- !u!1 &9167931102173882985
 GameObject:
   m_ObjectHideFlags: 0

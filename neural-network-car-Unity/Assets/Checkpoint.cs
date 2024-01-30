@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    public Checkpoint(int index, float distance)
+    [SerializeField] private int index;
+    [SerializeField] float distance;
+    public void initialize(int index, float distance, float width)
     {
         this.index = index;
+        this.distance = distance;
+        transform.localScale = new Vector3(1, 1, width);
     }
-    public bool isPassed;
-    private int index, distance;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isPassed) return;
-        
         if (other.tag == "Car")
-            other.GetComponent<ScoreCalculator>().PassedCheckpoint(index);
+            other.GetComponent<ScoreCalculator>().PassedCheckpoint(index, int.Parse(other.name));
     }
 
     public float GetDistance()
