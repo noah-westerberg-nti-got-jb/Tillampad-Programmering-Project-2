@@ -4,23 +4,35 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    [SerializeField] private int index;
+    [SerializeField] public int index;
     [SerializeField] float distance;
-    public void initialize(int index, float distance, float width)
+
+    ScoreCalculator scoreCalculator;
+
+    public void Initialize(float width, float distance, int index)
     {
         this.index = index;
+        gameObject.name = "Checkpoint: " + index.ToString();
         this.distance = distance;
-        transform.localScale = new Vector3(1, 1, width);
+        transform.localScale = new Vector3(1 / 2, 1, width);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (scoreCalculator == null)
+            scoreCalculator = GameObject.Find("Manager").GetComponent<ScoreCalculator>();
+
         if (other.tag == "Car")
-            other.GetComponent<ScoreCalculator>().PassedCheckpoint(index, int.Parse(other.name));
+            scoreCalculator.PassedCheckpoint(index, other.GetComponent<CarController>().index);
     }
 
     public float GetDistance()
     {
         return distance;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }

@@ -15,7 +15,10 @@ public class CarController : MonoBehaviour
 
     [SerializeField] Transform front;
     [SerializeField] float viewAngle = 70;
+    [SerializeField] float viewDistance = 20;
     [SerializeField] int vissionLines = 5;
+
+    public int index = 0;
 
     void Start()
     {
@@ -28,7 +31,7 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        GetDistances(vissionLines, -viewAngle, viewAngle);
+        GetDistances(vissionLines, -viewAngle, viewAngle, viewDistance);
 
         currentAcceleration = 0;
 
@@ -36,6 +39,8 @@ public class CarController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W))
                 Accelerate();
+            else if (Input.GetKey(KeyCode.S))
+                Break();
             if (Input.GetKey(KeyCode.A))
                 Turn(-1);
             else if (Input.GetKey(KeyCode.D))
@@ -62,6 +67,11 @@ public class CarController : MonoBehaviour
         currentAcceleration = acceleration;
     }
 
+    public void Break()
+    {
+        currentAcceleration = acceleration / -2;
+    }
+
     public void Turn(int direction)
     {
         float rotation;
@@ -73,7 +83,7 @@ public class CarController : MonoBehaviour
         transform.Rotate(new Vector3(0, rotation), Space.Self);
     }
 
-    public float[] GetDistances(int rays, float minAngle, float maxAngle)
+    public float[] GetDistances(int rays, float minAngle, float maxAngle, float viewDistance)
     {
         float[] distances = new float[rays];
         float distanceBetweenRays = (maxAngle - minAngle) / (rays - 1);
@@ -84,14 +94,14 @@ public class CarController : MonoBehaviour
             Vector3 direction = new Vector3(Mathf.Cos(carAngle + (minAngle + (distanceBetweenRays * i)) * Mathf.Deg2Rad), 0, Mathf.Sin(carAngle + (minAngle + (distanceBetweenRays * i)) * Mathf.Deg2Rad)).normalized;
 
             RaycastHit hit;
-            if (Physics.Raycast(front.position, direction, out hit, 20, LayerMask.GetMask("Wall")))
+            if (Physics.Raycast(front.position, direction, out hit, viewDistance, LayerMask.GetMask("Wall")))
             {
                 distances[i] = (front.position - hit.point).magnitude;
             }
             else
-                distances[i] = 20;
+                distances[i] = viewDistance;
 
-            Color rayColor = rayColorGradient.Evaluate((20 - distances[i]) / 20);
+            Color rayColor = rayColorGradient.Evaluate((viewDistance - distances[i]) / viewDistance);
             Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
         }
             return distances;
@@ -99,7 +109,7 @@ public class CarController : MonoBehaviour
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "wall")
+            if (other.tag == "Wall")
                 Debug.Log("Crashed");
         }
     }

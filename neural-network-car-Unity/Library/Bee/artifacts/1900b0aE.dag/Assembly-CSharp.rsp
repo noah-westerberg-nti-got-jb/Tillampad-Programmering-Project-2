@@ -358,6 +358,7 @@
 "Assets/Manager.cs"
 "Assets/NeuralNetworkScript.cs"
 "Assets/ScoreCalculator.cs"
+"Assets/Wall.cs"
 -langversion:9.0
 
 /deterministic

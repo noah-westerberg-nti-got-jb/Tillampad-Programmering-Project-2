@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 8156438714749204918}
   m_Layer: 0
   m_Name: Car
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -249,12 +249,12 @@ MonoBehaviour:
   rotationSpeed: 150
   deceleration: 0.5
   maxRotationRadius: 10
-  velocity: 10
+  velocity: 0
   rayColorGradient:
     serializedVersion: 2
-    key0: {r: 0, g: 1, b: 0, a: 1}
+    key0: {r: 0, g: 1, b: 0, a: 0.11764706}
     key1: {r: 1, g: 1, b: 0, a: 1}
-    key2: {r: 1, g: 0, b: 0, a: 0}
+    key2: {r: 1, g: 0, b: 0, a: 1}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -269,8 +269,8 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65535
-    atime2: 0
+    atime1: 328
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
@@ -279,9 +279,10 @@ MonoBehaviour:
     m_Mode: 0
     m_ColorSpace: -1
     m_NumColorKeys: 3
-    m_NumAlphaKeys: 2
+    m_NumAlphaKeys: 3
   front: {fileID: 8508716627238182723}
   viewAngle: 70
+  viewDistance: 20
   vissionLines: 5
 --- !u!1 &9167931102173882985
 GameObject:
