@@ -14,15 +14,12 @@ public class Manager : MonoBehaviour
 
     GenerateTrack trackGenerator;
 
-    ScoreCalculator score;
-
     [SerializeField] float trackLength, trackIncrementSize, trackWidth, trackCheckpointDensity, turnRange, minTurnDistance, maxTurnDistance;
     [SerializeField] int turns;
 
     private void Start()
     {
         trackGenerator = GetComponent<GenerateTrack>();
-        score = GetComponent<ScoreCalculator>();
     }
 
     void Update()
@@ -54,12 +51,6 @@ public class Manager : MonoBehaviour
 
            trackGenerator.Generate(trackLength, trackIncrementSize, trackWidth, turnRange, 0, minTurnDistance, maxTurnDistance, trackCheckpointDensity);
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SpawnCar(new Vector3(0, 0, 0));
-
-            score.enabled = true;
-        }
     }
 
     void SetTime(float scale)
@@ -72,7 +63,7 @@ public class Manager : MonoBehaviour
     { 
         cars.Add(Instantiate(car, position, Quaternion.identity));
         cars[cars.Count - 1].name = "Car: " + (cars.Count - 1).ToString();
-        cars[cars.Count - 1].GetComponent<CarController>().index = cars.Count - 1;
+        // cars[cars.Count - 1].GetComponent<CarController>().index = cars.Count - 1;
         carCount = cars.Count;
     }
 }

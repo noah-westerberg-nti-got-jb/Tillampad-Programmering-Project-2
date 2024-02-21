@@ -92,7 +92,7 @@ class NeuralNetwork
         return outputNode;
     }
 
-    public void ÍnitializeNetwork(int[] nodes, System.Random rng)
+    public NeuralNetwork(int[] nodes, System.Random rng)
     {
         NetworkLayer[] newLayers = new NetworkLayer[nodes.Length];
         for (int i = 0; i < nodes.Length; i++)
@@ -100,15 +100,6 @@ class NeuralNetwork
             if (i == 0)
             {
                 newLayers[0] = new NetworkLayer(nodes[i]);
-                //double[] biases = new double[nodes[i]];
-                //double[] weigths = new double[nodes[i]];
-                //for (int j = 0; j < nodes[i]; j++)
-                //{
-                //    biases[j] = rng.NextDouble();
-                //    weigths[j] = rng.NextDouble();
-                //}
-                //newLayers[0].SetWeights(nodes[i], weigths);
-                //newLayers[0].SetBiases(biases);
                 continue;
             }
 

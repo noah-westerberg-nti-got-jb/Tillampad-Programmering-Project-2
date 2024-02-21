@@ -18,7 +18,17 @@ public class CarController : MonoBehaviour
     [SerializeField] float viewDistance = 20;
     [SerializeField] int vissionLines = 5;
 
-    public int index = 0;
+    public void Initialize(CarControllerArgs args)
+    {
+        acceleration = args.acceleration;
+        maxSpeed = args.maxSpeed;
+        rotationSpeed = args.rotationSpeed;
+        deceleration = args.deceleration;
+        maxRotationRadius = args.maxRotationRadius;
+        viewAngle = args.viewAngle;
+        viewDistance = args.viewDistance;
+        vissionLines = args.vissionLines;
+    }
 
     void Start()
     {

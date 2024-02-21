@@ -7,8 +7,6 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] public int index;
     [SerializeField] float distance;
 
-    ScoreCalculator scoreCalculator;
-
     public void Initialize(float width, float distance, int index)
     {
         this.index = index;
@@ -19,11 +17,8 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (scoreCalculator == null)
-            scoreCalculator = GameObject.Find("Manager").GetComponent<ScoreCalculator>();
-
         if (other.tag == "Car")
-            scoreCalculator.PassedCheckpoint(index, other.GetComponent<CarController>().index);
+            other.GetComponent<Score>().PassedCheckpoint(index);
     }
 
     public float GetDistance()
