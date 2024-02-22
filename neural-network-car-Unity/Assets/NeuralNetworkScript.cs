@@ -1,4 +1,6 @@
-﻿class NetworkLayer
+﻿using UnityEngine;
+
+class NetworkLayer
 {
     int inputNodesNum, outputNodesNum;
     double[,] weights;
@@ -20,7 +22,7 @@
 
         weights = new double[outputNodes, 1];
         for (int i = 0; i < outputNodes; i++)
-            weights[i, 1] = 1;
+            weights[i, 0] = 1;
         biases = new double[outputNodes];
     }
 
@@ -50,12 +52,18 @@
     public void SetWeights(int receivingNodeNum, double[] values)
     {
         for (int i = 0; i < values.Length; i++)
+        {
             weights[receivingNodeNum, i] = values[i];
+        }
     }
     public void ShiftWeights(int receivingNodeNum, double[] values)
     {
         for (int i = 0; i < values.Length; i++)
             weights[receivingNodeNum, i] += values[i];
+    }
+    public double[,] GetWeights()
+    {
+        return weights;
     }
 
     public void SetBiases(double[] values)
@@ -66,6 +74,11 @@
     {
         for (int i = 0; i < biases.Length; i++)
             biases[i] += values[i];  
+    }
+
+    public double[] GetBiases()
+    {
+        return biases;
     }
 
 }
@@ -105,16 +118,16 @@ class NeuralNetwork
 
             newLayers[i] = new NetworkLayer(nodes[i - 1], nodes[i]);
             double[] biases = new double[nodes[i]];
-            for (int j = 0; j < nodes[i - 1]; j++)
+            for (int j = 0; j < nodes[i]; j++)
             {
                 biases[j] = rng.NextDouble();
 
-                double[] weigths = new double[nodes[i]];
-                for (int k = 0; k < nodes[i]; k++)
+                double[] weigths = new double[nodes[i - 1]];
+                for (int k = 0; k < nodes[i - 1]; k++)
                 {
                     weigths[k] = rng.NextDouble();
                 }
-                newLayers[0].SetWeights(j, weigths);
+                newLayers[i].SetWeights(j, weigths);
             }
             newLayers[i].SetBiases(biases);
         }

@@ -360,7 +360,7 @@
 "Assets/Learning.cs"
 "Assets/Manager.cs"
 "Assets/NeuralNetworkScript.cs"
-"Assets/ScoreCalculator.cs"
+"Assets/Score.cs"
 "Assets/Wall.cs"
 -langversion:9.0
 

@@ -11,7 +11,7 @@ public class Score : MonoBehaviour
     float distancePassed, distanceFromPassedCheckpoints, distancePassedToNextCheckpoint;
     float timeSinceStart;
 
-    bool crashed = false;
+    bool crashed = true;
 
     float distanceScoreMultiplyer = 1, crashPenalty = 0;
 
@@ -21,7 +21,7 @@ public class Score : MonoBehaviour
         crashPenalty = crashScorePenalty;
     }
 
-    public void RetartScore()
+    public void StartScore()
     {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         checkpoints = SortCheckpoints(checkpoints);
@@ -38,21 +38,20 @@ public class Score : MonoBehaviour
 
     private void Update()
     {
-        if (!crashed)
-        {
-            timeSinceStart += Time.deltaTime;
+        if (crashed) return;
+        
+
+        timeSinceStart += Time.deltaTime;
+
+        // Debug.Log("i: " + currentCheckpointIndex + " p :" + currentCheckpoint.GetPosition());
+
+        distancePassedToNextCheckpoint = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.GetPosition()).magnitude;
+        distancePassed = distanceFromPassedCheckpoints + distancePassedToNextCheckpoint;
 
 
-            // Debug.Log("i: " + currentCheckpointIndex + " p :" + currentCheckpoint.GetPosition());
+        // Debug.Log("D: " + distancePassed[0] + " T: " + timeSinceStart + " S: " + Score(0));
 
-            distancePassedToNextCheckpoint = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.GetPosition()).magnitude;
-            distancePassed = distanceFromPassedCheckpoints + distancePassedToNextCheckpoint;
-
-
-            // Debug.Log("D: " + distancePassed[0] + " T: " + timeSinceStart + " S: " + Score(0));
-
-            // Debug.DrawLine(currentCheckpoint.GetPosition(), currentCheckpoint.GetPosition() + Vector3.up * 10, Color.green);
-        }
+        // Debug.DrawLine(currentCheckpoint.GetPosition(), currentCheckpoint.GetPosition() + Vector3.up * 10, Color.green);
     }
 
     public void PassedCheckpoint(int checkpointIndex)
@@ -85,7 +84,7 @@ public class Score : MonoBehaviour
         return sorted;
     }
 
-    void Stop()
+    public void Crash()
     {
         crashed = true;
     }

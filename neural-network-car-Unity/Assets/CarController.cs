@@ -7,7 +7,9 @@ public class CarController : MonoBehaviour
 
     [SerializeField] bool control = false;
 
-    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10, velocity = 0;
+    [SerializeField] float acceleration = .4f, maxSpeed = 20, rotationSpeed = 180, deceleration = .05f, maxRotationRadius = 10;
+
+    public float velocity = 0;
 
     private float currentAcceleration = 0;
 
@@ -25,25 +27,11 @@ public class CarController : MonoBehaviour
         rotationSpeed = args.rotationSpeed;
         deceleration = args.deceleration;
         maxRotationRadius = args.maxRotationRadius;
-        viewAngle = args.viewAngle;
-        viewDistance = args.viewDistance;
-        vissionLines = args.vissionLines;
-    }
-
-    void Start()
-    {
-        Vector3 colorValues = new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)).normalized;
-        Color carColor = new Color(colorValues.x, colorValues.y, colorValues.z);
-
-        foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
-            meshRenderer.material.color = carColor;
     }
 
     void Update()
     {
-        GetDistances(vissionLines, -viewAngle, viewAngle, viewDistance);
-
-        currentAcceleration = 0;
+        // GetDistances(vissionLines, -viewAngle, viewAngle, viewDistance);
 
         if (control)
         {
@@ -70,6 +58,8 @@ public class CarController : MonoBehaviour
         velocity += (currentAcceleration - deceleration * velocity) * Time.deltaTime;
         if (velocity < 0.01)
             velocity = 0;
+
+        currentAcceleration = 0;
     }
 
     public void Accelerate()
@@ -93,9 +83,9 @@ public class CarController : MonoBehaviour
         transform.Rotate(new Vector3(0, rotation), Space.Self);
     }
 
-    public float[] GetDistances(int rays, float minAngle, float maxAngle, float viewDistance)
+    public double[] GetDistances(int rays, float minAngle, float maxAngle, float viewDistance)
     {
-        float[] distances = new float[rays];
+        double[] distances = new double[rays];
         float distanceBetweenRays = (maxAngle - minAngle) / (rays - 1);
         float carAngle = Mathf.Atan2(transform.forward.z, transform.forward.x);
 
@@ -111,15 +101,15 @@ public class CarController : MonoBehaviour
             else
                 distances[i] = viewDistance;
 
-            Color rayColor = rayColorGradient.Evaluate((viewDistance - distances[i]) / viewDistance);
-            Debug.DrawLine(front.position, front.position + direction * distances[i], rayColor);
+            Color rayColor = rayColorGradient.Evaluate((float)((viewDistance - distances[i]) / viewDistance));
+            Debug.DrawLine(front.position, front.position + direction * (float)distances[i], rayColor);
         }
-            return distances;
-        }
-
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.tag == "Wall")
-                Debug.Log("Crashed");
-        }
+        return distances;
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Wall")
+            GetComponent<Car>().Crash();
+    }
+}

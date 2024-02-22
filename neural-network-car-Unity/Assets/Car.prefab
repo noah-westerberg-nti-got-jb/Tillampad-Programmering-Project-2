@@ -158,7 +158,9 @@ GameObject:
   - component: {fileID: 1327950995477368708}
   - component: {fileID: 1807036042996210815}
   - component: {fileID: 229667111803890891}
+  - component: {fileID: 7566333009353548168}
   - component: {fileID: 8156438714749204918}
+  - component: {fileID: 484790771985696177}
   m_Layer: 0
   m_Name: Car
   m_TagString: Car
@@ -231,6 +233,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7566333009353548168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257816459561741887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0830e461fc1cda4b868c3c8b2056e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 0
+  crashed: 0
 --- !u!114 &8156438714749204918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,7 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac84915fe2730942a55926962a76e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: 1
+  control: 0
   acceleration: 20
   maxSpeed: 50
   rotationSpeed: 150
@@ -284,6 +300,18 @@ MonoBehaviour:
   viewAngle: 70
   viewDistance: 20
   vissionLines: 5
+--- !u!114 &484790771985696177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257816459561741887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115bbd657ef834a45b95db350d02894d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9167931102173882985
 GameObject:
   m_ObjectHideFlags: 0
