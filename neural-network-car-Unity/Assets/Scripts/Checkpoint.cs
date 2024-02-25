@@ -5,8 +5,16 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
     [SerializeField] public int index;
-    [SerializeField] float distance;
+    [SerializeField] float distance; // sträckan från det föregående checkpointet
 
+    /*
+     *  Ger spel objectet värden för när den skapas med kod
+     * 
+     *  parametrar:
+     *      width: bredden på banan
+     *      distance: sträckan från det föregående checkpointet
+     *      index: index
+     */
     public void Initialize(float width, float distance, int index)
     {
         this.index = index;
@@ -15,6 +23,10 @@ public class Checkpoint : MonoBehaviour
         transform.localScale = new Vector3(1 / 2, 1, width);
     }
 
+    /*  Activeras när en collider kolliderar med objectet
+     *  parameter:
+     *      other: collidern på objectet som kolliderade med objectet
+    */
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Car")
@@ -24,10 +36,5 @@ public class Checkpoint : MonoBehaviour
     public float GetDistance()
     {
         return distance;
-    }
-
-    public Vector3 GetPosition()
-    {
-        return transform.position;
     }
 }

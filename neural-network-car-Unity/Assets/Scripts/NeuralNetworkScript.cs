@@ -7,9 +7,10 @@ using UnityEngine;
 class NetworkLayer : ISerializationCallbackReceiver
 {
     [HideInInspector] public int inputNodesNum, outputNodesNum;
-    double[,] weights;
-    [SerializeField] double[] biases;
+    double[,] weights; // en vikt för varje nod koppling
+    [SerializeField] double[] biases; // en bias/activationsgränns för varje nod
 
+    // Kod för att serializea multidimensionella arrayer tagit härifrån:
     // https://forum.unity.com/threads/how-i-serialize-multidimensional-arrays.988704/
 
     [SerializeField, HideInInspector] private List<Package<double>> serializableWeigths;
@@ -49,6 +50,7 @@ class NetworkLayer : ISerializationCallbackReceiver
         }
     }
 
+    // NetworkLayer constructor
     public NetworkLayer(int inputNodes, int outputNodes)
     {
         inputNodesNum = inputNodes;
@@ -58,6 +60,7 @@ class NetworkLayer : ISerializationCallbackReceiver
         biases = new double[outputNodes];
     }
 
+    // Constructor för första lagret som inte har några inputnoder
     public NetworkLayer(int outputNodes)
     {
         inputNodesNum = 1;
@@ -69,13 +72,16 @@ class NetworkLayer : ISerializationCallbackReceiver
         biases = new double[outputNodes];
     }
 
+
     public double[] CalculateOutputs(double[] input)
     {
 
         double[] output = new double[outputNodesNum];
 
+        // går igenom varje nod i lagret
         for (int i = 0; i < outputNodesNum; i++)
         {
+            // går igenom varje input till noden
             for (int j = 0; j < inputNodesNum; j++)
             {
                 output[i] += input[j] * weights[i, j];
@@ -89,20 +95,19 @@ class NetworkLayer : ISerializationCallbackReceiver
 
     double Activation(double input)
     {
-        return 1 / (1 + System.Math.Exp(-input));
+        return 1 / (1 + System.Math.Exp(-input)); // sigmoid funktion
     }
 
-    public void SetWeights(int receivingNodeNum, double[] values)
+    public void SetWeights(int node, double[] values)
     {
+        // går igenom varje koppling till noden
         for (int i = 0; i < values.Length; i++)
-        {
-            weights[receivingNodeNum, i] = values[i];
-        }
+            weights[node, i] = values[i];
     }
-    public void ShiftWeights(int receivingNodeNum, double[] values)
+    public void ShiftWeights(int node, double[] values)
     {
         for (int i = 0; i < values.Length; i++)
-            weights[receivingNodeNum, i] += values[i];
+            weights[node, i] += values[i];
     }
     public double[,] GetWeights()
     {
@@ -115,6 +120,7 @@ class NetworkLayer : ISerializationCallbackReceiver
     }
     public void ShiftBiases(double[] values)
     {
+        // går igenom varje nod
         for (int i = 0; i < biases.Length; i++)
             biases[i] += values[i];
     }
@@ -149,19 +155,23 @@ class NeuralNetwork
         return outputNode;
     }
 
+
+    // nodes: hur många noder som finns på varje lager
     public NeuralNetwork(int[] nodes, System.Random rng)
     {
-        NetworkLayer[] newLayers = new NetworkLayer[nodes.Length];
+        NetworkLayer[] newLayers = new NetworkLayer[nodes.Length]; // nodes.Lenght: antal lager
         for (int i = 0; i < nodes.Length; i++)
         {
+            // första lagret har ingen inputs
             if (i == 0)
             {
                 newLayers[0] = new NetworkLayer(nodes[i]);
                 continue;
             }
 
-            newLayers[i] = new NetworkLayer(nodes[i - 1], nodes[i]);
+            newLayers[i] = new NetworkLayer(nodes[i - 1], nodes[i]); // input noderna är samma som noderna från det förra lagret
             double[] biases = new double[nodes[i]];
+            // anger slumpade värden till koplingarna och noderna
             for (int j = 0; j < nodes[i]; j++)
             {
                 biases[j] = rng.NextDouble();

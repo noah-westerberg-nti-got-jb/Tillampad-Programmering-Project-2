@@ -8804,9 +8804,9 @@ MonoBehaviour:
   minTurnDistance: 1
   maxTurnDistance: 5
   turns: 0
-  startTransform: {fileID: 925603585}
+  spawnObject: {fileID: 925603585}
   populationSize: 20
-  elitCutOf: 0.2
+  eliteCutOf: 0
   childToMutationRatio: 0.5
   networkSize: 060000001e000000140000000a00000004000000
   carControllerValues:
@@ -8814,7 +8814,7 @@ MonoBehaviour:
     maxSpeed: 50
     rotationSpeed: 150
     deceleration: 0.5
-    maxRotationRadius: 10
+    maxRotationRadius: 5
   viewLines: 5
   viewAngle: 75
   maxViewDistance: 15

@@ -2,15 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * Klass för att håll koll på hur långt en bil har kört och hur lång tid den har kört
+ */
 [Serializable]
 public class Score : MonoBehaviour
 {
     [SerializeField, HideInInspector] GameObject[] checkpoints;
-    int currentCheckpointIndex = 0;
-    Checkpoint currentCheckpoint;
+    int currentCheckpointIndex = 0; // indexen av checkpointet som bilen ska köra till
+    Checkpoint currentCheckpoint; // class-obectet av checkpointet som bilen ska köra till. gör koden mer "clean" genom att ha det som en separat variable/atribut; annars hade koden på rad 83 behövts skrivas många fler gånger
 
     float distancePassed, distanceFromPassedCheckpoints, distancePassedToNextCheckpoint;
+    // Jag mätte inte bara ut stärckan som bilen körde för att undvika att den skulle få höga poäng av att bara köra runt i cirklar
+    // distancePassed: den totala passerade sträckan
+    // distanceFromPassedCheckpoints: den sammanlagda sträckan från distance atributen i checkpointsen som bilen har passerad
+    // distancePassedToNextCheckpoint: raka sträckan till nästa checkpoint
     float timeSinceStart;
 
     bool crashed = true;
@@ -18,6 +24,7 @@ public class Score : MonoBehaviour
     bool finished = false;
 
     [SerializeField, HideInInspector] float distanceScoreMultiplyer, crashPenalty;
+    // scoreDistanceMultiplyer: multiplicerar poängen get från distance så att, att köra långt lite långsammare väger mer än att köra en kort distance snabbt
 
     public void Initialize(float scoreFromDistanceMultiplyer, float crashScorePenalty)
     {
@@ -27,6 +34,13 @@ public class Score : MonoBehaviour
         StartScore();
     }
 
+    /*
+     * Startar igång poängräkningen
+     * 
+     * Separat från initsialiserings funktionen för att den inte anger några externa värden
+     * 
+     * Funktionen hade använts om samma bil flytades till en annan bana
+     */
     public void StartScore()
     {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -45,19 +59,11 @@ public class Score : MonoBehaviour
     private void Update()
     {
         if (crashed) return;
-        
 
         timeSinceStart += Time.deltaTime;
 
-        // Debug.Log("i: " + currentCheckpointIndex + " p :" + currentCheckpoint.GetPosition());
-
-        distancePassedToNextCheckpoint = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.GetPosition()).magnitude;
+        distancePassedToNextCheckpoint = currentCheckpoint.GetDistance() - (transform.position - currentCheckpoint.transform.position).magnitude;
         distancePassed = distanceFromPassedCheckpoints + distancePassedToNextCheckpoint;
-
-
-        // Debug.Log("D: " + distancePassed[0] + " T: " + timeSinceStart + " S: " + Score(0));
-
-        // Debug.DrawLine(currentCheckpoint.GetPosition(), currentCheckpoint.GetPosition() + Vector3.up * 10, Color.green);
     }
 
     public void PassedCheckpoint(int checkpointIndex)
@@ -81,12 +87,16 @@ public class Score : MonoBehaviour
     {
         float finishBonus = 0;
         if (finished)
-            finishBonus = 10000000000;
+            finishBonus = 10000000000; // lägger till ett stort tal så att de som klarar hela banan får höga poäng
         else if (crashed)
-            return (distancePassed * distanceScoreMultiplyer / timeSinceStart) - (crashPenalty / timeSinceStart);
+            return (distancePassed * distanceScoreMultiplyer / timeSinceStart) - (crashPenalty / timeSinceStart); // delar poäng straffet på tiden så den blir mindre viktigare senare (gör nog ingen stor sklidnad)
         return (distancePassed * distanceScoreMultiplyer / timeSinceStart) + finishBonus;
     }
 
+    /*
+     * sorterar checkpoint objecten efter deras index
+     * tidskomplexitet är inte så viktigt för att det kommer inte vara så många object att sortera
+     */
     GameObject[] SortCheckpoints(GameObject[] checkpoints)
     {
         GameObject[] sorted = new GameObject[checkpoints.Length];

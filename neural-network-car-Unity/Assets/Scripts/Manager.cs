@@ -7,20 +7,27 @@ public class Manager : MonoBehaviour
 
     private float timeScale = 1;
 
+    // prefab för bil-objectet
     [SerializeField] GameObject car;
 
+    // track-genererings variabler; används inte
     GenerateTrack trackGenerator;
-
     [SerializeField] float trackLength, trackIncrementSize, trackWidth, trackCheckpointDensity, turnRange, minTurnDistance, maxTurnDistance;
     [SerializeField] int turns;
 
-    [SerializeField] Transform startTransform;
+
+    [SerializeField] Transform spawnObject; // bilar skapas som ett "barn" till objectet vid dess position och i riktingen den pekar
     [SerializeField] int populationSize;
-    [SerializeField] float elitCutOf, childToMutationRatio;
-    [SerializeField] int[] networkSize;
+    [SerializeField] float eliteCutOf, childToMutationRatio; 
+    // eliteCutOf: Hur stor andel av populationen som går vidare utan att förändras
+    // childToMutationRatio: hur stor andel av resten av populationen som kommer att antingen bli ett barn eller muteras
+    // 1: alla blir barn; 0: alla blir muterade
+    [SerializeField] int[] networkSize; // storleken av nätverket; hur många noder det är vid varje lager
     [SerializeField] CarControllerArgs carControllerValues;
-    [SerializeField] int viewLines;
+    [SerializeField] int viewLines; // Hur många syn intag bilarna har
     [SerializeField] float viewAngle, maxViewDistance, scoreDistanceMultiplyer, crashPenalty;
+    // viewAngle: Vinkeln som bilen kan se från mitten av dess vy i grader
+    // scoreDistanceMultiplyer: multiplicerar poängen get från distance så att, att köra långt lite långsammare väger mer än att köra en kort distance snabbt
     [SerializeField] int rngSeed;
 
     Learning learning;
@@ -35,49 +42,26 @@ public class Manager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
+            // gör att tiden går dubbelt så snabbt
             timeScale = timeScale * 2;
             SetTime(timeScale);
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
+            // gör att tiden går hälften så snabbt
             timeScale = timeScale / 2;
             SetTime(timeScale);
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            learning.Inizialize(startTransform, populationSize, elitCutOf, childToMutationRatio, networkSize, car, carControllerValues, viewLines, viewAngle, maxViewDistance, scoreDistanceMultiplyer, crashPenalty, rngSeed);
+            learning.Inizialize(spawnObject, populationSize, eliteCutOf, childToMutationRatio, networkSize, car, carControllerValues, viewLines, viewAngle, maxViewDistance, scoreDistanceMultiplyer, crashPenalty, rngSeed);
         }
-
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    SpawnCar(new Vector3(0, 0, 0));
-
-        //}
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    foreach(GameObject car in cars)
-        //        Destroy(car);
-        //    foreach (GameObject checkpoint in GameObject.FindGameObjectsWithTag("Checkpoint"))
-        //        Destroy(checkpoint);
-        //    foreach (GameObject wall in GameObject.FindGameObjectsWithTag("Wall"))
-        //        Destroy(wall);
-
-        //   trackGenerator.Generate(trackLength, trackIncrementSize, trackWidth, turnRange, 0, minTurnDistance, maxTurnDistance, trackCheckpointDensity);
-        //}
     }
 
-    void SetTime(float scale)
+    void SetTime(float timeScale)
     {
-        Time.timeScale = scale;
-        Debug.Log("Time Set to: " + scale);
+        Time.timeScale = this.timeScale;
+        Debug.Log("Time Set to: " + this.timeScale);
     }
-
-    //void SpawnCar(Vector3 position)
-    //{ 
-    //    cars.Add(Instantiate(car, position, Quaternion.identity));
-    //    cars[cars.Count - 1].name = "Car: " + (cars.Count - 1).ToString();
-    //    // cars[cars.Count - 1].GetComponent<CarController>().index = cars.Count - 1;
-    //    carCount = cars.Count;
-    //}
 }

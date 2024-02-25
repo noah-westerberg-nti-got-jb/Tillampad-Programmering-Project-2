@@ -6,42 +6,37 @@ using UnityEngine;
 class Car : MonoBehaviour
 {
     public NeuralNetwork network;
-    [SerializeField, HideInInspector] CarController controller;
-    [SerializeField, HideInInspector] Score score;
-    public int index;
+    CarController controller;
+    Score score;
+    int index;
 
-    float scoreShift = 0;
-
-    [SerializeField] float currentScore;
+    [SerializeField] float currentScore; // atribut för att se värdet i unity inspectorn
 
     public bool crashed = false;
 
+    // sparar datan så det kan serializeras vid kopiering
     [SerializeField, HideInInspector] int viewLines;
     [SerializeField, HideInInspector] float viewAngle, viewDistance;
 
-    public System.Random rng;
-    [SerializeField /* , HideInInspector */] int rngSeed;
-
+    // sparar datan så det kan serializeras vid copiering
     [SerializeField, HideInInspector] CarControllerArgs carControllerValues;
     [SerializeField, HideInInspector] float scoreDistanceMultiplyer, crashScorePenalty;
+    // scoreDistanceMultiplyer: multiplicerar poängen get från distance så att, att köra långt lite långsammare väger mer än att köra en kort distance snabbt
 
     public void Initialize(int index, int[] networkSize, CarControllerArgs carControllerValues, int viewLines, float viewAngle, float maxViewDistance, float scoreDistanceMultiplyer, float crashScorePenalty, int rngSeed)
     {
         this.index = index;
-        // name = "Car: " + index.ToString();
 
-        controller = gameObject.GetComponent<CarController>();
+        controller = GetComponent<CarController>();
         controller.Initialize(carControllerValues);
         this.carControllerValues = carControllerValues;
         this.viewLines = viewLines;
         this.viewAngle = viewAngle;
         viewDistance = maxViewDistance;
+        
+        network = new NeuralNetwork(networkSize, new System.Random(rngSeed + index));
 
-        this.rngSeed = rngSeed;
-        rng = new System.Random(rngSeed + index);
-        network = new NeuralNetwork(networkSize, rng);
-
-        score = gameObject.GetComponent<Score>();
+        score = GetComponent<Score>();
         score.Initialize(scoreDistanceMultiplyer, crashScorePenalty);
         this.scoreDistanceMultiplyer = scoreDistanceMultiplyer;
         this.crashScorePenalty = crashScorePenalty;
@@ -52,12 +47,6 @@ class Car : MonoBehaviour
         crashed = true;
         score.Crash();
         controller.velocity = 0;
-        scoreShift = 0;
-    }
-
-    public void StartScore()
-    {
-        score.StartScore();
     }
 
     public float GetScore()
@@ -65,17 +54,10 @@ class Car : MonoBehaviour
         return score.GetScore();
     }
 
-    public float ScoreShift()
-    {
-        if (scoreShift == 0)
-            scoreShift = (((float)rng.NextDouble() * 2) - 1);
+    [SerializeField] string currentlyDoing; // atribut för att se värdet i unity inspectorn
 
-        return scoreShift;
-    }
-
-    [SerializeField] string currentlyDoing;
-
-    double Map(double valueIn, double inMin, double inMax, double outMin, double outMax)
+    // tar ett värde som förhåller sig till ett omfång och omvandlar det till ett annat omfång. tagit från arduino map functionen
+    double ChangeRange(double valueIn, double inMin, double inMax, double outMin, double outMax)
     {
         return (valueIn - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
@@ -87,9 +69,10 @@ class Car : MonoBehaviour
         double[] distances = controller.GetDistances(viewLines, -viewAngle, viewAngle, viewDistance);
         for (int i = 0; i < distances.Length; i++)
         {
-            distances[i] = Map(distances[i], 0, viewDistance, -1, 1);
+            distances[i] = ChangeRange(distances[i], 0, viewDistance, -1, 1);
         }
-        double[] input = distances.Concat(new double[] { Map(controller.velocity, 0, carControllerValues.maxSpeed, -1, 1) }).ToArray();
+        // skapar en input array med syn-distancerna och med bilens hastighet
+        double[] input = distances.Concat(new double[] { ChangeRange(controller.velocity, 0, carControllerValues.maxSpeed, -1, 1) }).ToArray();
         double[] outputs = network.GetOutputs(input);
         int outputNode = network.CalculateOutputNode(outputs);
         switch (outputNode)
@@ -111,41 +94,21 @@ class Car : MonoBehaviour
                 currentlyDoing = "left";
                 break;
         }
-
-        //foreach (NetworkLayer layer in network.GetLayers())
-        //{
-        //    Debug.Log("Weights: ");
-        //    double[,] weights = layer.GetWeights();
-        //    for (int i = 0; i < weights.GetLength(0); i++)
-        //    {
-        //        Debug.Log(i);
-        //        for (int j = 0; j < weights.GetLength(1); j++)
-        //        {
-        //            Debug.Log(weights[i, j]);
-        //        }
-        //    }
-
-        //    Debug.Log("Biases: ");
-        //    double[] biases = layer.GetBiases();
-        //    for (int i = 0; i < weights.GetLength(0); i++)
-        //    {
-        //        Debug.Log(i);
-        //        Debug.Log(biases[i]);
-        //    }
-        //}
     }
 
+    /*
+     *  skapar en copia av componenten på ett nytt object
+     *  
+     *  parameter:
+     *      newCarObject: objectet som componenten ska kopieras till
+     *      
+     *  https://www.wwt.com/article/how-to-clone-objects-in-dotnet-core : option 1
+     */
     public Car Copy(GameObject newCarObject)
     {
         var serialized = JsonUtility.ToJson(this);
-        // Debug.Log(serialized);
         JsonUtility.FromJsonOverwrite(serialized, newCarObject.GetComponent<Car>());
         return newCarObject.GetComponent<Car>();
-    }
-
-    public void SetRNG(int rng)
-    {
-        rngSeed = rng;
     }
 
     public void SetIndex(int index)
@@ -157,17 +120,13 @@ class Car : MonoBehaviour
     {
         name = "Car: " + index.ToString();
 
-
         controller = GetComponent<CarController>();
         controller.Initialize(carControllerValues);
 
         score = GetComponent<Score>();
         score.Initialize(scoreDistanceMultiplyer, crashScorePenalty);
 
-        scoreShift = 0;
-
-        rng = new System.Random(rngSeed + index);
-
+        // anger slumpad färg till bilen
         Vector3 colorValues = new Vector3(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)).normalized;
         Color carColor = new Color(colorValues.x, colorValues.y, colorValues.z);
         foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
