@@ -177,7 +177,7 @@ Transform:
   m_GameObject: {fileID: 3257816459561741887}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.71, z: -0.4}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -245,8 +245,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0830e461fc1cda4b868c3c8b2056e72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  network:
+    layers: []
+  controller: {fileID: 0}
+  score: {fileID: 0}
   index: 0
+  currentScore: 0
   crashed: 0
+  viewLines: 0
+  viewAngle: 0
+  viewDistance: 0
+  rngSeed: 0
+  currentlyDoing: 
 --- !u!114 &8156438714749204918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,9 +307,9 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
   front: {fileID: 8508716627238182723}
-  viewAngle: 70
-  viewDistance: 20
-  vissionLines: 5
+  viewAngle: 0
+  viewDistance: 0
+  vissionLines: 0
 --- !u!114 &484790771985696177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +322,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115bbd657ef834a45b95db350d02894d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkpoints: []
+  distanceScoreMultiplyer: 0
+  crashPenalty: 0
 --- !u!1 &9167931102173882985
 GameObject:
   m_ObjectHideFlags: 0

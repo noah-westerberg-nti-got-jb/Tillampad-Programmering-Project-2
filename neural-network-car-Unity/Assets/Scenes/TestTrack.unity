@@ -3398,7 +3398,7 @@ Transform:
   m_GameObject: {fileID: 925603584}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.64, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8805,11 +8805,10 @@ MonoBehaviour:
   maxTurnDistance: 5
   turns: 0
   startTransform: {fileID: 925603585}
-  populationSize: 200
-  elitCutOf: 0
-  childToMutationRatio: 0
-  networkSize: 050000000a00000004000000
-  carObject: {fileID: 0}
+  populationSize: 20
+  elitCutOf: 0.2
+  childToMutationRatio: 0.5
+  networkSize: 060000001e000000140000000a00000004000000
   carControllerValues:
     acceleration: 20
     maxSpeed: 50
@@ -8819,9 +8818,9 @@ MonoBehaviour:
   viewLines: 5
   viewAngle: 75
   maxViewDistance: 15
-  scoreDistanceMultiplyer: 1
-  crashPenalty: 0
-  rngSeed: 38295
+  scoreDistanceMultiplyer: 5
+  crashPenalty: 50
+  rngSeed: 235643
 --- !u!114 &2010072907
 MonoBehaviour:
   m_ObjectHideFlags: 0
